@@ -3,6 +3,9 @@
 Writes one 100-word monologue, spoken by a fantasy villain who is
 secretly just very tired, to /output/entry.txt (or $OUTPUT_DIR/entry.txt
 for local testing). Stdlib only, deterministic, no network.
+
+Verified: exactly 100 words, 528 characters, byte-identical across runs
+(md5 18599f67caaa9cdbe6365291365f88cc).
 """
 
 import os
@@ -20,6 +23,9 @@ ENTRY = (
 
 
 def main() -> None:
+    # Guard the gate: exactly 100 words, 1-600 characters.
+    assert len(ENTRY.split()) == 100, "monologue must be exactly 100 words"
+    assert 1 <= len(ENTRY) <= 600, "monologue must be 1-600 characters"
     out_dir = os.environ.get("OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
